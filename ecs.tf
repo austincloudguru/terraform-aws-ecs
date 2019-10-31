@@ -46,11 +46,7 @@ resource "aws_autoscaling_group" "ecs_asg" {
   desired_capacity          = var.desired_instance_capacity
   health_check_type         = "DC2"
   health_check_grace_period = 300
-  vpc_zone_identifier = [
-    var.subnet_id_0,
-    var.subnet_id_1,
-    var.subnet_id_2,
-  ]
+  vpc_zone_identifier       =  var.subnets
   launch_configuration = aws_launch_configuration.ecs_lc.name
   lifecycle {
     create_before_destroy = true
