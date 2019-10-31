@@ -75,7 +75,7 @@ resource "aws_launch_configuration" "ecs_lc" {
 }
 
 data "template_file" "user_data" {
-  template = file("templates/user_data.tpl")
+  template = file("${path.module}/templates/user_data.tpl")
 
   vars = {
     ecs_cluster_name = aws_ecs_cluster.ecs_cluster.name
