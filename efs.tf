@@ -28,26 +28,10 @@ resource "aws_efs_file_system" "ecs_efs" {
   }
 }
 
-
-resource "aws_efs_mount_target" "ecs_efs_mount_target_0" {
+resource "aws_efs_mount_target" "ecs_efs_mount_target" {
+  count = length(var.subnets) > 0 ? length(var.subnets) : 0
   file_system_id = aws_efs_file_system.ecs_efs.id
-  subnet_id      = var.subnet_id_0
-  security_groups = [
-    aws_security_group.ecs_efs_sg.id
-  ]
-}
-
-resource "aws_efs_mount_target" "ecs_efs_mount_target_1" {
-  file_system_id = aws_efs_file_system.ecs_efs.id
-  subnet_id      = var.subnet_id_1
-  security_groups = [
-    aws_security_group.ecs_efs_sg.id
-  ]
-}
-
-resource "aws_efs_mount_target" "ecs_efs_mount_target_2" {
-  file_system_id = aws_efs_file_system.ecs_efs.id
-  subnet_id      = var.subnet_id_2
+  subnet_id = var.subnets[count.index]
   security_groups = [
     aws_security_group.ecs_efs_sg.id
   ]

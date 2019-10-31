@@ -5,16 +5,8 @@ variable "ecs_cluster_name" {
   type = string
 }
 
-variable "subnet_id_0" {
-  type = string
-}
-
-variable "subnet_id_1" {
-  type = string
-}
-
-variable "subnet_id_2" {
-  type = string
+variable "subnets" {
+  type = list
 }
 
 variable "min_instance_size" {
