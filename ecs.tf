@@ -68,6 +68,7 @@ resource "aws_launch_configuration" "ecs_lc" {
   key_name                    = var.key_name
   associate_public_ip_address = false
   user_data                   = data.template_file.user_data.rendered
+  depends_on                  = [aws_efs_mount_target.ecs_efs_mount_target]
 
   lifecycle {
     create_before_destroy = true
