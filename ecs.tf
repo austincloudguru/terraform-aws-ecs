@@ -63,7 +63,7 @@ resource "aws_launch_configuration" "ecs_lc" {
   name_prefix                 = "${var.ecs_cluster_name}-lc-"
   image_id                    = data.aws_ami.latest_ecs.image_id
   instance_type               = var.instance_type
-  security_groups             = [aws_security_group.ecs_sg.id]
+  security_groups             = [aws_security_group.ecs_sg.id, aws_security_group.ecs_efs_sg.id]
   iam_instance_profile        = aws_iam_instance_profile.instance_profile.name
   key_name                    = var.key_name
   associate_public_ip_address = false
