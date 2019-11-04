@@ -44,7 +44,7 @@ resource "aws_autoscaling_group" "ecs_asg" {
   min_size                  = var.min_instance_size
   max_size                  = var.max_instance_size
   desired_capacity          = var.desired_instance_capacity
-  health_check_type         = "DC2"
+  health_check_type         = "EC2"
   health_check_grace_period = 300
   vpc_zone_identifier       =  var.subnets
   launch_configuration = aws_launch_configuration.ecs_lc.name
