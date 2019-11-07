@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Create the EFS for Jenkins
+# Create the EFS for ECS
 #------------------------------------------------------------------------------
 resource "aws_security_group" "ecs_efs_sg" {
   name        = "${var.ecs_cluster_name}-efs-sg"
@@ -18,14 +18,23 @@ resource "aws_security_group" "ecs_efs_sg" {
     cidr_blocks = [
     "0.0.0.0/0"]
   }
+  tags = merge(
+    {
+      "Name" = "${var.ecs_cluster_name}-efs-sg"
+    },
+    var.tags
+  )
 }
 
 resource "aws_efs_file_system" "ecs_efs" {
   creation_token = "${var.ecs_cluster_name}-efs"
 
-  tags = {
-    Name = "${var.ecs_cluster_name}-efs"
-  }
+  tags = merge(
+    {
+      "Name" = "${var.ecs_cluster_name}-efs"
+    },
+    var.tags
+  )
 }
 
 resource "aws_efs_mount_target" "ecs_efs_mount_target" {
