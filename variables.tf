@@ -1,13 +1,16 @@
 variable "vpc_id" {
-  type = string
+  description = "VPC ID"
+  type        = string
 }
 
 variable "ecs_cluster_name" {
-  type = string
+  description = "ECS Cluster Name"
+  type        = string
 }
 
 variable "subnets" {
-  type = list
+  description = "List of Subnet ID"
+  type        = list
 }
 
 variable "min_instance_size" {
@@ -36,6 +39,7 @@ variable "key_name" {
 }
 
 variable "aws_region" {
-  type    = string
-  default = "us-east-2"
+  description = "AWS Region"
+  type        = string
+  default     = "us-east-2"
 }
