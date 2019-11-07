@@ -10,6 +10,12 @@ resource "aws_iam_role" "role" {
   name               = "${var.ecs_cluster_name}-ecs-role"
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  tags = merge(
+    {
+      "Name" = "${var.ecs_cluster_name}-ecs-role"
+    },
+    var.tags
+  )
 }
 
 resource "aws_iam_role_policy" "role_policy" {
