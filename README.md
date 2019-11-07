@@ -14,4 +14,4 @@ Terraform module that deploys an ECS autoscaling group with EFS as a datastore.
       key_name = "my-key
       aws_region = "us-west-2"
     }
-
+    
