@@ -5,15 +5,13 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   name = var.ecs_cluster_name
 }
 
-data "aws_ami" "latest_ecs" {
+data "aws_ami" "latest_ecs_ami" {
   most_recent = true
   owners      = ["591542846629"] # AWS
-
   filter {
     name   = "name"
     values = ["*amazon-ecs-optimized"]
   }
-
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
@@ -46,8 +44,8 @@ resource "aws_autoscaling_group" "ecs_asg" {
   desired_capacity          = var.desired_instance_capacity
   health_check_type         = "EC2"
   health_check_grace_period = 300
-  vpc_zone_identifier       =  var.subnets
-  launch_configuration = aws_launch_configuration.ecs_lc.name
+  vpc_zone_identifier       = var.subnets
+  launch_configuration      = aws_launch_configuration.ecs_lc.name
   lifecycle {
     create_before_destroy = true
   }
@@ -61,7 +59,7 @@ resource "aws_autoscaling_group" "ecs_asg" {
 
 resource "aws_launch_configuration" "ecs_lc" {
   name_prefix                 = "${var.ecs_cluster_name}-lc-"
-  image_id                    = data.aws_ami.latest_ecs.image_id
+  image_id                    = data.aws_ami.latest_ecs_ami.image_id
   instance_type               = var.instance_type
   security_groups             = [aws_security_group.ecs_sg.id, aws_security_group.ecs_efs_sg.id]
   iam_instance_profile        = aws_iam_instance_profile.instance_profile.name
