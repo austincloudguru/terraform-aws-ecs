@@ -3,6 +3,12 @@
 #------------------------------------------------------------------------------
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = var.ecs_cluster_name
+  tags = merge(
+    {
+      "Name" = var.ecs_cluster_name
+    },
+    var.tags
+  )
 }
 
 data "aws_ami" "latest_ecs_ami" {
@@ -34,6 +40,12 @@ resource "aws_security_group" "ecs_sg" {
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
+  tags = merge(
+    {
+      "Name" = "${var.ecs_cluster_name}-ecs-sg"
+    },
+    var.tags
+  )
 }
 
 
@@ -50,11 +62,16 @@ resource "aws_autoscaling_group" "ecs_asg" {
     create_before_destroy = true
   }
 
-  tag {
-    key                 = "Name"
-    value               = "${var.ecs_cluster_name}-ecs-asg"
-    propagate_at_launch = true
-  }
+  tags =concat(
+    [
+      {
+          key                 = "Name"
+          value               = "${var.ecs_cluster_name}-ecs-asg"
+          propagate_at_launch = true
+      }
+    ],
+    local.tags_asg_format,
+  )
 }
 
 resource "aws_launch_configuration" "ecs_lc" {
@@ -83,3 +100,16 @@ data "template_file" "user_data" {
   }
 }
 
+locals {
+  tags_asg_format = null_resource.tags_as_list_of_maps.*.triggers
+}
+
+resource "null_resource" "tags_as_list_of_maps" {
+  count = length(keys(var.tags))
+
+  triggers = {
+    "key"                 = keys(var.tags)[count.index]
+    "value"               = values(var.tags)[count.index]
+    "propagate_at_launch" = "true"
+  }
+}
