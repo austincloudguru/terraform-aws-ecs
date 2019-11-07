@@ -15,6 +15,7 @@ cloud-init-per once mkdir_efs mkdir /efs
 cloud-init-per once mount_efs echo -e '${efs_id}:/ /efs efs defaults,_netdev 0 0' >> /etc/fstab
 mount -a
 chown -R 1000:1000 /efs
+chmod -R 4777 /efs
 
 --==BOUNDARY==
 Content-Type: text/x-shellscript; charset="us-ascii"
