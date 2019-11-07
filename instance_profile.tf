@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Create an Instance Profile
+# Create the Instance Profile
 #------------------------------------------------------------------------------
 resource "aws_iam_instance_profile" "instance_profile" {
   name = "${var.ecs_cluster_name}-ecs-instance_profile"

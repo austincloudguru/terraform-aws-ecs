@@ -62,12 +62,12 @@ resource "aws_autoscaling_group" "ecs_asg" {
     create_before_destroy = true
   }
 
-  tags =concat(
+  tags = concat(
     [
       {
-          key                 = "Name"
-          value               = "${var.ecs_cluster_name}-ecs-asg"
-          propagate_at_launch = true
+        key                 = "Name"
+        value               = "${var.ecs_cluster_name}-ecs-asg"
+        propagate_at_launch = true
       }
     ],
     local.tags_asg_format,
