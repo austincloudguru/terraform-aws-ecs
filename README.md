@@ -1,5 +1,5 @@
 # AWS ECS Terraform Module
-Terraform module that deploys an ECS autoscaling group with EFS mounted at /efa for a datastore.
+Terraform module that deploys an ECS autoscaling group with EFS mounted at /efs for a datastore.
 
 ## Usage
 ```hcl
