@@ -37,3 +37,9 @@ module "ecs" {
 |------|-------------|
 | cluster_id | The ECS cluster ID |
 | cluster_arn | The ECS cluster ARN |
+
+## Authors
+Module is maintained by [Mark Honomichl](https://github.com/austincloudguru).
+
+## License
+MIT Licensed.  See LICENSE for full details
