@@ -57,3 +57,13 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "task_iam_policies" {
+  description = "Additional IAM policies for the task"
+  type = list(object({
+    effect = string
+    actions = list(string)
+    resources = list(string)
+  }))
+  default = []
+}

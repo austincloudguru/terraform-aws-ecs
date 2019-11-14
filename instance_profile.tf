@@ -48,6 +48,15 @@ data "aws_iam_policy_document" "policy" {
     ]
     resources = ["*"]
   }
+  dynamic "statement" {
+    for_each = var.task_iam_policies
+    content {
+      effect = lookup(statement.value, "effect", null)
+      actions = lookup(statement.value, "actions", null)
+      resources = lookup(statement.value, "resources", null)
+    }
+  }
+
 }
 
 data "aws_iam_policy_document" "assume_role" {
