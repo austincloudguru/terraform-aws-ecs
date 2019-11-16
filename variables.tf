@@ -1,15 +1,14 @@
 #------------------------------------------------------------------------------
 # Variables
 #------------------------------------------------------------------------------
-variable "vpc_name" {
-  description = "The name of the VPC that the ECS cluster will be deployed to"
+variable "vpc_id" {
+  description = "The VPC ID"
   type        = string
 }
 
-variable "subnet_filter" {
-  description = "Tag name to filter on for the EFS mount targets"
-  type        = string
-  default     = "private"
+variable "subnet_ids" {
+  description = "The Subnet IDs"
+  type        = list(string)
 }
 
 variable "efs_sg_id" {

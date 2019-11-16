@@ -1,22 +1,6 @@
 #------------------------------------------------------------------------------
 # Collect necessary data
 #------------------------------------------------------------------------------
-data "aws_caller_identity" "current" {}
-
-data "aws_vpc" "this" {
-  filter {
-    name   = "tag:Name"
-    values = [var.vpc_name]
-  }
-}
-
-data "aws_subnet_ids" "this" {
-  vpc_id = data.aws_vpc.this.id
-  tags = {
-    Name = "*${var.subnet_filter}*"
-  }
-}
-
 data "aws_ami" "latest_ecs_ami" {
   most_recent = true
   owners      = ["591542846629"] # AWS
@@ -55,15 +39,6 @@ EOF
 # Local Values
 #------------------------------------------------------------------------------
 locals {
-  subnet_ids_string = join(",", data.aws_subnet_ids.this.ids)
-  subnet_ids_list   = split(",", local.subnet_ids_string)
-}
-
-//locals {
-//  ecs_security_groups = [aws_security_group.this.id, var.ecs_efs_sg]
-//}
-
-locals {
   tags_asg_format = null_resource.tags_as_list_of_maps.*.triggers
 }
 
@@ -83,12 +58,12 @@ resource "null_resource" "tags_as_list_of_maps" {
 resource "aws_security_group" "this" {
   name        = var.ecs_name
   description = "Security Group for ECS cluster"
-  vpc_id      = data.aws_vpc.this.id
+  vpc_id      = var.vpc_id
   ingress {
     from_port   = 0
     protocol    = "-1"
     to_port     = 0
-    cidr_blocks = [data.aws_vpc.this.cidr_block]
+    cidr_blocks = [ecs_cidr_block]
   }
   egress {
     from_port   = 0
@@ -121,7 +96,7 @@ resource "aws_autoscaling_group" "this" {
   desired_capacity          = var.ecs_desired_capacity
   health_check_type         = "EC2"
   health_check_grace_period = 300
-  vpc_zone_identifier       = local.subnet_ids_list
+  vpc_zone_identifier       = var.subnet_ids
   launch_configuration      = aws_launch_configuration.this.name
   lifecycle {
     create_before_destroy = true
