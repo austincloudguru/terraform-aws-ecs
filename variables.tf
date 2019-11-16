@@ -17,6 +17,12 @@ variable "efs_sg_id" {
   default     = ""
 }
 
+variable "efs_id" {
+  description = "The EFS ID"
+  type        = string
+  default     = ""
+}
+
 variable "ecs_name" {
   description = "ECS Cluster Name"
   type        = string

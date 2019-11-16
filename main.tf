@@ -14,7 +14,8 @@ data "aws_ami" "latest_ecs_ami" {
   }
 }
 
-data "template_file" "user_data" {
+data "template_file" "user_data-default" {
+  count = length(var.efs_id) > 0 ? 0 : 1
   template = <<EOF
 Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
@@ -32,6 +33,43 @@ EOF
 
   vars = {
     ecs_cluster_name = aws_ecs_cluster.this.name
+  }
+}
+
+data "template_file" "user_data-efs" {
+  count = length(var.efs_id) > 0 ? 1 : 0
+  template = <<EOF
+Content-Type: multipart/mixed; boundary="==BOUNDARY=="
+MIME-Version: 1.0
+
+--==BOUNDARY==
+Content-Type: text/cloud-boothook; charset="us-ascii"
+
+# Install amazon-efs-utils
+cloud-init-per once yum_update yum update -y
+cloud-init-per once install_amazon-efs-utils yum install -y amazon-efs-utils
+
+# Create /efs folder
+cloud-init-per once mkdir_efs mkdir /efs
+
+# Mount /efs
+cloud-init-per once mount_efs echo -e '$${efs_id}:/ /efs efs defaults,_netdev 0 0' >> /etc/fstab
+mount -a
+
+--==BOUNDARY==
+Content-Type: text/x-shellscript; charset="us-ascii"
+
+#!/bin/bash
+# Set any ECS agent configuration options
+echo "ECS_CLUSTER=$${ecs_cluster_name}" >> /etc/ecs/ecs.config
+
+--==BOUNDARY==--
+
+EOF
+
+  vars = {
+    ecs_cluster_name = aws_ecs_cluster.this.name
+    efs_id           = var.efs_id
   }
 }
 
@@ -122,7 +160,8 @@ resource "aws_launch_configuration" "this" {
   iam_instance_profile        = aws_iam_instance_profile.this.name
   key_name                    = var.ecs_key_name
   associate_public_ip_address = var.ecs_associate_public_ip_address
-  user_data                   = data.template_file.user_data.rendered
+  user_data                   = length(var.efs_id) > 0 ? data.template_file.user_data-efs.rendered : data.template_file.user_data-default.rendered
+  //user_data                   = data.template_file.user_data.rendered
 
   lifecycle {
     create_before_destroy = true
