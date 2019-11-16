@@ -2,7 +2,7 @@
 # Variables
 #------------------------------------------------------------------------------
 variable "vpc_id" {
-  description = "The VPC ID"
+  description = "The VPC ID that the cluster will be deployed to"
   type        = string
 }
 
