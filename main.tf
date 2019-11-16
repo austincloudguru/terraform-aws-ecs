@@ -161,7 +161,6 @@ resource "aws_launch_configuration" "this" {
   key_name                    = var.ecs_key_name
   associate_public_ip_address = var.ecs_associate_public_ip_address
   user_data                   = length(var.efs_id) > 0 ? data.template_file.user_data-efs[0].rendered : data.template_file.user_data-default[0].rendered
-  //user_data                   = data.template_file.user_data.rendered
 
   lifecycle {
     create_before_destroy = true
