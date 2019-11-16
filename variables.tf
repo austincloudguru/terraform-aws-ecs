@@ -12,6 +12,12 @@ variable "subnet_filter" {
   default     = "private"
 }
 
+variable "efs_sg_id" {
+  description = "The EFS Security Group ID"
+  type        = string
+  default     = null
+}
+
 variable "ecs_name" {
   description = "ECS Cluster Name"
   type        = string

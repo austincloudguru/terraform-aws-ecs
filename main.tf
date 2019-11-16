@@ -60,7 +60,7 @@ locals {
 }
 
 locals {
-  ecs_security_groups = [aws_security_group.this.id]
+  ecs_security_groups = [aws_security_group.this.id, var.ecs_efs_sg]
 }
 
 locals {
@@ -143,7 +143,7 @@ resource "aws_launch_configuration" "this" {
   name_prefix                 = "${var.ecs_name}-"
   image_id                    = data.aws_ami.latest_ecs_ami.image_id
   instance_type               = var.ecs_instance_type
-  security_groups             = local.ecs_security_groups
+  security_groups             = [aws_security_group.this.id, var.efs_sg_id]
   iam_instance_profile        = aws_iam_instance_profile.this.name
   key_name                    = var.ecs_key_name
   associate_public_ip_address = var.ecs_associate_public_ip_address
