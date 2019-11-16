@@ -1,55 +1,20 @@
 #------------------------------------------------------------------------------
 # Variables
 #------------------------------------------------------------------------------
-variable "vpc_id" {
-  description = "VPC ID"
+variable "vpc_name" {
+  description = "The name of the VPC that the ECS cluster will be deployed to"
   type        = string
 }
 
-variable "ecs_cluster_name" {
+variable "subnet_filter" {
+  description = "Tag name to filter on for the EFS mount targets"
+  type        = string
+  default     = "private"
+}
+
+variable "ecs_name" {
   description = "ECS Cluster Name"
   type        = string
-}
-
-variable "subnets" {
-  description = "List of Subnet ID"
-  type        = list(string)
-}
-
-variable "min_instance_size" {
-  description = "Minimum number of EC2 instances."
-  type        = number
-  default     = 1
-}
-
-variable "max_instance_size" {
-  description = "Maximum number of EC2 instances."
-  type        = number
-  default     = 1
-}
-
-variable "desired_instance_capacity" {
-  description = "Desired number of EC2 instances."
-  type        = number
-  default     = 1
-}
-
-variable "instance_type" {
-  description = "Default instance type"
-  type        = string
-  default     = "t3.medium"
-}
-
-variable "key_name" {
-  description = "SSH key name in your AWS account for AWS instances."
-  type        = string
-  default     = ""
-}
-
-variable "aws_region" {
-  description = "AWS Region"
-  type        = string
-  default     = "us-east-2"
 }
 
 variable "tags" {
@@ -58,8 +23,44 @@ variable "tags" {
   default     = {}
 }
 
-variable "task_iam_policies" {
-  description = "Additional IAM policies for the task"
+variable "ecs_min_size" {
+  description = "Minimum number of EC2 instances."
+  type        = number
+  default     = 1
+}
+
+variable "ecs_max_size" {
+  description = "Maximum number of EC2 instances."
+  type        = number
+  default     = 1
+}
+
+variable "ecs_desired_capacity" {
+  description = "Desired number of EC2 instances."
+  type        = number
+  default     = 1
+}
+
+variable "ecs_instance_type" {
+  description = "Default instance type"
+  type        = string
+  default     = "t3.medium"
+}
+
+variable "ecs_key_name" {
+  description = "SSH key name in your AWS account for AWS instances."
+  type        = string
+  default     = ""
+}
+
+variable "ecs_associate_public_ip_address" {
+  description = "Whether to associate a public IP in the launch configuration"
+  type        = bool
+  default     = false
+}
+
+variable "ecs_additional_iam_statements" {
+  description = "Additional IAM statements for the ECS instances"
   type = list(object({
     effect = string
     actions = list(string)
