@@ -22,6 +22,11 @@ variable "ecs_name" {
   type        = string
 }
 
+variable "ecs_cidr_block" {
+  description = "ECS Cluster Name"
+  type        = string
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
