@@ -60,7 +60,7 @@ locals {
 }
 
 locals {
-  ecs_security_groups = tolist(aws_security_group.this.id))
+  ecs_security_groups = tolist(aws_security_group.this.id)
 }
 
 locals {
