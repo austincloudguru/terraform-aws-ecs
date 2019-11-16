@@ -60,7 +60,7 @@ locals {
 }
 
 locals {
-  ecs_security_groups = [aws_security_group.this.id, "sg-3erwefsdi984"]
+  ecs_security_groups = [aws_security_group.this.id]
 }
 
 locals {
