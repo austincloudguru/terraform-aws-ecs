@@ -15,7 +15,7 @@ variable "subnet_filter" {
 variable "efs_sg_id" {
   description = "The EFS Security Group ID"
   type        = string
-  default     = null
+  default     = ""
 }
 
 variable "ecs_name" {
