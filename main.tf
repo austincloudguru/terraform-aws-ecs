@@ -63,7 +63,7 @@ resource "aws_security_group" "this" {
     from_port   = 0
     protocol    = "-1"
     to_port     = 0
-    cidr_blocks = [ecs_cidr_block]
+    cidr_blocks = var.ecs_cidr_block
   }
   egress {
     from_port   = 0

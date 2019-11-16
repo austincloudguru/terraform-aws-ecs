@@ -24,7 +24,7 @@ variable "ecs_name" {
 
 variable "ecs_cidr_block" {
   description = "ECS Cluster Name"
-  type        = string
+  type        = list(string)
 }
 
 variable "tags" {
