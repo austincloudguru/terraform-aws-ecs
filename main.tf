@@ -59,9 +59,9 @@ locals {
   subnet_ids_list   = split(",", local.subnet_ids_string)
 }
 
-locals {
-  ecs_security_groups = [aws_security_group.this.id, var.ecs_efs_sg]
-}
+//locals {
+//  ecs_security_groups = [aws_security_group.this.id, var.ecs_efs_sg]
+//}
 
 locals {
   tags_asg_format = null_resource.tags_as_list_of_maps.*.triggers
