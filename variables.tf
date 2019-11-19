@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------------
 # Variables
 #------------------------------------------------------------------------------
-variable "depends_on" {
+variable "depends_on_efs" {
   description = "If attaching EFS, it makes sure that the mount targets are ready"
   type    = list(string)
   default = []
