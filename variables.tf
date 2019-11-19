@@ -1,6 +1,12 @@
 #------------------------------------------------------------------------------
 # Variables
 #------------------------------------------------------------------------------
+variable "depends_on" {
+  description = "If attaching EFS, it makes sure that the mount targets are ready"
+  type    = list(string)
+  default = []
+}
+
 variable "vpc_id" {
   description = "The VPC ID that the cluster will be deployed to"
   type        = string
