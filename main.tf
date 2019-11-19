@@ -15,7 +15,7 @@ data "aws_ami" "latest_ecs_ami" {
 }
 
 data "template_file" "user_data-default" {
-  count = length(var.efs_id) > 0 && length(var.efs_sg_id) > 0  ? 0 : 1
+  count = var.attach_efs ? 0 : 1
   template = <<EOF
 Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
@@ -37,7 +37,7 @@ EOF
 }
 
 data "template_file" "user_data-efs" {
-  count = length(var.efs_id) > 0 && length(var.efs_sg_id) > 0 ? 1 : 0
+  count = var.attach_efs ? 1 : 0
   template = <<EOF
 Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
@@ -160,7 +160,7 @@ resource "aws_launch_configuration" "this" {
   iam_instance_profile        = aws_iam_instance_profile.this.name
   key_name                    = var.ecs_key_name
   associate_public_ip_address = var.ecs_associate_public_ip_address
-  user_data                   = length(var.efs_id) > 0  && length(var.efs_sg_id) > 0  ? data.template_file.user_data-efs[0].rendered : data.template_file.user_data-default[0].rendered
+  user_data                   = var.attach_efs ? data.template_file.user_data-efs[0].rendered : data.template_file.user_data-default[0].rendered
 
   lifecycle {
     create_before_destroy = true

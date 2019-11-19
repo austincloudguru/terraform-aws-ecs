@@ -11,14 +11,20 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
+variable "attach_efs" {
+  description = "Whether to try and attach an EFS volume to the instances"
+  type        = bool
+  default     = false
+}
+
 variable "efs_sg_id" {
-  description = "The EFS Security Group ID"
+  description = "The EFS Security Group ID - Required if attach_efs is true"
   type        = string
   default     = ""
 }
 
 variable "efs_id" {
-  description = "The EFS ID"
+  description = "The EFS ID - Required if attach_efs is true"
   type        = string
   default     = ""
 }
