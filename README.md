@@ -44,8 +44,9 @@ ecs_additional_iam_statements = [
 |------|-------------|:----:|:-----:|:-----:|
 | vpc_id | The VPC ID that the cluster will be deployed to| string | | yes |
 | subnet_ids | The Subnet IDs that the cluster will be deployed to | list(string) | | yes |
-| efs_sg_id | The EFS Security Group ID | string | "" | no |
-| efs_id | The EFS ID | String | "" | no |
+| attach_efs | Whether to try and attach an EFS volume to the instances | bool | false | no
+| efs_sg_id | The EFS Security Group ID  - Required if attach_efs is true | string | "" | no |
+| efs_id | The EFS ID  - Required if attach_efs is true | String | "" | no |
 | ecs_name | Name for the ECS cluster that will be deployed | string | | yes | 
 | ecs_cidr_block | Cider Block for the Security Group | list(string) | | yes |
 | ecs_min_size | The minimum number of ECS servers to create in the autoscaling group | number | 1 | no |
