@@ -37,6 +37,7 @@ EOF
 }
 
 data "template_file" "user_data-efs" {
+  depends_on = [var.depends_on_efs]
   count = var.attach_efs ? 1 : 0
   template = <<EOF
 Content-Type: multipart/mixed; boundary="==BOUNDARY=="
