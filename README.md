@@ -1,5 +1,8 @@
 # AWS ECS Terraform Module
-Terraform module that deploys an ECS autoscaling group.  If you include an EFS ID and EFS Security Group, it will also mount the EFS volume to the ECS instances.
+Terraform module that deploys an ECS autoscaling group.  If you include an EFS ID and EFS Security Group, it will also mount the EFS volume to the ECS instances.  
+
+# Deploying with EFS
+By default, the module will deploy without trying to mount an EFS volume.  If you attempt to deploy the EFS at the same time as the ECS cluster, a race condition exists where the autoscaling group gets created before the mount targets have finished being created.   To avoid this, you can set the depends_on_efs variable to the aws_efs_mount_target output.  This way, the autoscaling group won't get created until the EFS mount targets have been created.
 
 ## Usage
 ```hcl
@@ -17,8 +20,10 @@ module "ecs-0" {
   ecs_key_name                  = "aws-key"
   tags                          = var.tags
   ecs_additional_iam_statements = var.ecs_additional_iam_statements
+  attach_efs                    = true
   efs_id                        = "fs-532cdcd3"
   efs_sg_id                     = "sg-076487b693f21bcb8"
+  depends_on_efs                = ["fsmt-8387e72b"]
 }
 # Variables
 tags = {
@@ -47,6 +52,7 @@ ecs_additional_iam_statements = [
 | attach_efs | Whether to try and attach an EFS volume to the instances | bool | false | no
 | efs_sg_id | The EFS Security Group ID  - Required if attach_efs is true | string | "" | no |
 | efs_id | The EFS ID  - Required if attach_efs is true | String | "" | no |
+| depends_on_efs | If attaching EFS, it makes sure that the mount targets are ready | list(string) | [] | no |
 | ecs_name | Name for the ECS cluster that will be deployed | string | | yes | 
 | ecs_cidr_block | Cider Block for the Security Group | list(string) | | yes |
 | ecs_min_size | The minimum number of ECS servers to create in the autoscaling group | number | 1 | no |
