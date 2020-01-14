@@ -3,8 +3,8 @@
 #------------------------------------------------------------------------------
 variable "depends_on_efs" {
   description = "If attaching EFS, it makes sure that the mount targets are ready"
-  type    = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 
 variable "vpc_id" {
@@ -90,9 +90,15 @@ variable "ecs_associate_public_ip_address" {
 variable "ecs_additional_iam_statements" {
   description = "Additional IAM statements for the ECS instances"
   type = list(object({
-    effect = string
-    actions = list(string)
+    effect    = string
+    actions   = list(string)
     resources = list(string)
   }))
   default = []
+}
+
+variable "container_start_timeout" {
+  description = "Adjust the timeout for a container starting, expressed in minutes. For example 10m"
+  type        = string
+  default     = "3m"
 }

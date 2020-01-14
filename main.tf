@@ -15,7 +15,7 @@ data "aws_ami" "latest_ecs_ami" {
 }
 
 data "template_file" "user_data-default" {
-  count = var.attach_efs ? 0 : 1
+  count    = var.attach_efs ? 0 : 1
   template = <<EOF
 Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
@@ -26,20 +26,22 @@ Content-Type: text/x-shellscript; charset="us-ascii"
 #!/bin/bash
 # Set any ECS agent configuration options
 echo "ECS_CLUSTER=$${ecs_cluster_name}" >> /etc/ecs/ecs.config
+echo "ECS_CONTAINER_START_TIMEOUT=$${container_start_timeout}" >> /etc/ecs/ecs.config
 
 --==BOUNDARY==--
 
 EOF
 
   vars = {
-    ecs_cluster_name = aws_ecs_cluster.this.name
+    ecs_cluster_name        = aws_ecs_cluster.this.name
+    container_start_timeout = var.container_start_timeout
   }
 }
 
 data "template_file" "user_data-efs" {
   depends_on = [var.depends_on_efs]
-  count = var.attach_efs ? 1 : 0
-  template = <<EOF
+  count      = var.attach_efs ? 1 : 0
+  template   = <<EOF
 Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
 
@@ -63,14 +65,16 @@ Content-Type: text/x-shellscript; charset="us-ascii"
 #!/bin/bash
 # Set any ECS agent configuration options
 echo "ECS_CLUSTER=$${ecs_cluster_name}" >> /etc/ecs/ecs.config
+echo "ECS_CONTAINER_START_TIMEOUT=$${container_start_timeout}" >> /etc/ecs/ecs.config
 
 --==BOUNDARY==--
 
 EOF
 
   vars = {
-    ecs_cluster_name = aws_ecs_cluster.this.name
-    efs_id           = var.efs_id
+    ecs_cluster_name        = aws_ecs_cluster.this.name
+    efs_id                  = var.efs_id
+    container_start_timeout = var.container_start_timeout
   }
 }
 
@@ -221,8 +225,8 @@ data "aws_iam_policy_document" "policy" {
   dynamic "statement" {
     for_each = var.ecs_additional_iam_statements
     content {
-      effect = lookup(statement.value, "effect", null)
-      actions = lookup(statement.value, "actions", null)
+      effect    = lookup(statement.value, "effect", null)
+      actions   = lookup(statement.value, "actions", null)
       resources = lookup(statement.value, "resources", null)
     }
   }

@@ -63,6 +63,7 @@ ecs_additional_iam_statements = [
 | ecs_associate_public_ip_address | Whether to associate a public IP in the launch configuration | bool | false | no | 
 | ecs_additional_iam_statements | Additional IAM statements for the ECS instances | list(object) | [] | no |
 | tags | A map of tags to add to all resources | map(string) | {} | no |
+| container_start_timeout | Timeout in minutes allowed for a contaner to startup | string | 3m | no |
 
 ## Outputs
 
