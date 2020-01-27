@@ -2,7 +2,7 @@
 # Collect necessary data
 #------------------------------------------------------------------------------
 data "template_file" "user_data-default" {
-  count = var.attach_efs ? 0 : 1
+  count    = var.attach_efs ? 0 : 1
   template = <<EOF
 Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
@@ -25,8 +25,8 @@ EOF
 
 data "template_file" "user_data-efs" {
   depends_on = [var.depends_on_efs]
-  count = var.attach_efs ? 1 : 0
-  template = <<EOF
+  count      = var.attach_efs ? 1 : 0
+  template   = <<EOF
 Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
 
@@ -208,8 +208,8 @@ data "aws_iam_policy_document" "policy" {
   dynamic "statement" {
     for_each = var.additional_iam_statements
     content {
-      effect = lookup(statement.value, "effect", null)
-      actions = lookup(statement.value, "actions", null)
+      effect    = lookup(statement.value, "effect", null)
+      actions   = lookup(statement.value, "actions", null)
       resources = lookup(statement.value, "resources", null)
     }
   }

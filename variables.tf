@@ -3,8 +3,8 @@
 #------------------------------------------------------------------------------
 variable "depends_on_efs" {
   description = "If attaching EFS, it makes sure that the mount targets are ready"
-  type    = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 
 variable "vpc_id" {
@@ -77,8 +77,8 @@ variable "instance_type" {
 
 variable "image_id" {
   description = "The EC2 image ID to launch"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "key_name" {
@@ -96,8 +96,8 @@ variable "associate_public_ip_address" {
 variable "additional_iam_statements" {
   description = "Additional IAM statements for the ECS instances"
   type = list(object({
-    effect = string
-    actions = list(string)
+    effect    = string
+    actions   = list(string)
     resources = list(string)
   }))
   default = []
