@@ -35,12 +35,12 @@ variable "efs_id" {
   default     = ""
 }
 
-variable "ecs_name" {
+variable "name" {
   description = "ECS Cluster Name"
   type        = string
 }
 
-variable "ecs_cidr_block" {
+variable "cidr_block" {
   description = "ECS Cluster Name"
   type        = list(string)
 }
@@ -51,43 +51,49 @@ variable "tags" {
   default     = {}
 }
 
-variable "ecs_min_size" {
+variable "min_size" {
   description = "Minimum number of EC2 instances."
   type        = number
   default     = 1
 }
 
-variable "ecs_max_size" {
+variable "max_size" {
   description = "Maximum number of EC2 instances."
   type        = number
   default     = 1
 }
 
-variable "ecs_desired_capacity" {
+variable "desired_capacity" {
   description = "Desired number of EC2 instances."
   type        = number
   default     = 1
 }
 
-variable "ecs_instance_type" {
+variable "instance_type" {
   description = "Default instance type"
   type        = string
   default     = "t3.medium"
 }
 
-variable "ecs_key_name" {
+variable "image_id" {
+  description = "The EC2 image ID to launch"
+  type = string
+  default = ""
+}
+
+variable "key_name" {
   description = "SSH key name in your AWS account for AWS instances."
   type        = string
   default     = ""
 }
 
-variable "ecs_associate_public_ip_address" {
+variable "associate_public_ip_address" {
   description = "Whether to associate a public IP in the launch configuration"
   type        = bool
   default     = false
 }
 
-variable "ecs_additional_iam_statements" {
+variable "additional_iam_statements" {
   description = "Additional IAM statements for the ECS instances"
   type = list(object({
     effect = string

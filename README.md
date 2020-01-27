@@ -5,7 +5,7 @@ Terraform module that deploys an ECS autoscaling group.  If you include an EFS I
 By default, the module will deploy without trying to mount an EFS volume.  If you attempt to deploy the EFS at the same time as the ECS cluster, a race condition exists where the autoscaling group gets created before the mount targets have finished being created.   To avoid this, you can set the depends_on_efs variable to the aws_efs_mount_target output.  This way, the autoscaling group won't get created until the EFS mount targets have been created.
 
 ## Usage
-```hcl
+```hcl-terraform
 module "ecs-0" {
   source                        = "AustinCloudGuru/ecs/aws"
   version                       = "1.1.0"
@@ -70,6 +70,22 @@ ecs_additional_iam_statements = [
 |------|-------------|
 | cluster_id | The ECS cluster ID |
 | cluster_arn | The ECS cluster ARN |
+
+## Getting the AMI Version
+```hcl-terraform
+data "aws_ami" "latest_ecs_ami" {
+  most_recent = true
+  owners      = ["591542846629"] # AWS
+  filter {
+    name   = "name"
+    values = ["*amazon-ecs-optimized"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+```
 
 ## Authors
 Module is maintained by [Mark Honomichl](https://github.com/austincloudguru).

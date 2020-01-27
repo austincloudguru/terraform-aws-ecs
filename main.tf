@@ -1,19 +1,6 @@
 #------------------------------------------------------------------------------
 # Collect necessary data
 #------------------------------------------------------------------------------
-data "aws_ami" "latest_ecs_ami" {
-  most_recent = true
-  owners      = ["591542846629"] # AWS
-  filter {
-    name   = "name"
-    values = ["*amazon-ecs-optimized"]
-  }
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-
 data "template_file" "user_data-default" {
   count = var.attach_efs ? 0 : 1
   template = <<EOF
@@ -95,14 +82,14 @@ resource "null_resource" "tags_as_list_of_maps" {
 # Create ECS Cluster
 #------------------------------------------------------------------------------
 resource "aws_security_group" "this" {
-  name        = var.ecs_name
+  name        = var.name
   description = "Security Group for ECS cluster"
   vpc_id      = var.vpc_id
   ingress {
     from_port   = 0
     protocol    = "-1"
     to_port     = 0
-    cidr_blocks = var.ecs_cidr_block
+    cidr_blocks = var.cidr_block
   }
   egress {
     from_port   = 0
@@ -112,27 +99,27 @@ resource "aws_security_group" "this" {
   }
   tags = merge(
     {
-      "Name" = var.ecs_name
+      "Name" = var.name
     },
     var.tags
   )
 }
 
 resource "aws_ecs_cluster" "this" {
-  name = var.ecs_name
+  name = var.name
   tags = merge(
     {
-      "Name" = var.ecs_name
+      "Name" = var.name
     },
     var.tags
   )
 }
 
 resource "aws_autoscaling_group" "this" {
-  name                      = var.ecs_name
-  min_size                  = var.ecs_min_size
-  max_size                  = var.ecs_max_size
-  desired_capacity          = var.ecs_desired_capacity
+  name                      = var.name
+  min_size                  = var.min_size
+  max_size                  = var.max_size
+  desired_capacity          = var.desired_capacity
   health_check_type         = "EC2"
   health_check_grace_period = 300
   vpc_zone_identifier       = var.subnet_ids
@@ -145,7 +132,7 @@ resource "aws_autoscaling_group" "this" {
     [
       {
         key                 = "Name"
-        value               = var.ecs_name
+        value               = var.name
         propagate_at_launch = true
       }
     ],
@@ -154,13 +141,13 @@ resource "aws_autoscaling_group" "this" {
 }
 
 resource "aws_launch_configuration" "this" {
-  name_prefix                 = "${var.ecs_name}-"
-  image_id                    = data.aws_ami.latest_ecs_ami.image_id
-  instance_type               = var.ecs_instance_type
+  name_prefix                 = join("", [var.name, "-"])
+  image_id                    = var.image_id
+  instance_type               = var.instance_type
   security_groups             = (length(var.efs_sg_id) > 0 ? [aws_security_group.this.id, var.efs_sg_id] : [aws_security_group.this.id])
   iam_instance_profile        = aws_iam_instance_profile.this.name
-  key_name                    = var.ecs_key_name
-  associate_public_ip_address = var.ecs_associate_public_ip_address
+  key_name                    = var.key_name
+  associate_public_ip_address = var.associate_public_ip_address
   user_data                   = var.attach_efs ? data.template_file.user_data-efs[0].rendered : data.template_file.user_data-default[0].rendered
 
   lifecycle {
@@ -172,24 +159,24 @@ resource "aws_launch_configuration" "this" {
 # Create the Instance Profile
 #------------------------------------------------------------------------------
 resource "aws_iam_instance_profile" "this" {
-  name = var.ecs_name
+  name = var.name
   role = aws_iam_role.this.name
 }
 
 resource "aws_iam_role" "this" {
-  name               = var.ecs_name
+  name               = var.name
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
   tags = merge(
     {
-      "Name" = var.ecs_name
+      "Name" = var.name
     },
     var.tags
   )
 }
 
 resource "aws_iam_role_policy" "this" {
-  name   = var.ecs_name
+  name   = var.name
   role   = aws_iam_role.this.id
   policy = data.aws_iam_policy_document.policy.json
 }
@@ -219,7 +206,7 @@ data "aws_iam_policy_document" "policy" {
     resources = ["*"]
   }
   dynamic "statement" {
-    for_each = var.ecs_additional_iam_statements
+    for_each = var.additional_iam_statements
     content {
       effect = lookup(statement.value, "effect", null)
       actions = lookup(statement.value, "actions", null)
