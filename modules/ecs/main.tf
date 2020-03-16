@@ -101,7 +101,7 @@ resource "aws_ecs_cluster" "this" {
 resource "aws_ecs_capacity_provider" "this" {
   name = var.name
   auto_scaling_group_provider {
-    auto_scaling_Group_arn          = aws_autoscaling_group.this.arn
+    auto_scaling_group_arn          = aws_autoscaling_group.this.arn
     managed_terminiation_protection = var.managed_termination_protection
 
     managed_scaling {
