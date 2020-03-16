@@ -102,7 +102,7 @@ resource "aws_ecs_capacity_provider" "this" {
   name = var.name
   auto_scaling_group_provider {
     auto_scaling_group_arn          = aws_autoscaling_group.this.arn
-    managed_terminiation_protection = var.managed_termination_protection
+    managed_termination_protection = var.managed_termination_protection
 
     managed_scaling {
       minimum_scaling_step_size = var.minimum_scaling_step_size
