@@ -81,7 +81,7 @@ EOF
   vars = {
     ecs_cluster_name = aws_ecs_cluster.this.name
     efs_id           = var.efs_id
-    depends_on       = var.depends_on_efs
+    depends_on       = jsonencode(split(",", var.depends_on_efs))
   }
 }
 
