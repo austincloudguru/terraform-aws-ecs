@@ -48,7 +48,7 @@ variable "depends_on_efs" {
 variable "managed_termination_protection" {
   description = " Enables or disables container-aware termination of instances in the auto scaling group when scale-in happens"
   type        = string
-  default     = "ENABLED"
+  default     = "DISABLED"
 }
 
 variable "minimum_scaling_step_size" {
@@ -143,4 +143,10 @@ variable "termination_policies" {
   description = "A list of policies to decide how the instances in the auto scale group should be terminated"
   type        = list(string)
   default     = ["OldestInstance", "Default"]
+}
+
+variable "protect_from_scale_in" {
+  description = "Allows setting instance protection"
+  type        = bool
+  default     = false
 }
