@@ -6,10 +6,10 @@ resource "aws_iam_role" "ecs_exec_role" {
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.ecs_exec_assume_role_policy.json
   tags = merge(
-  {
-    "Name" = join("", [var.service_name, "-exec"])
-  },
-  var.tags
+    {
+      "Name" = join("", [var.service_name, "-exec"])
+    },
+    var.tags
   )
 }
 
@@ -56,10 +56,10 @@ resource "aws_iam_role" "instance_role" {
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.instance_assume_role_policy[0].json
   tags = merge(
-  {
-    "Name" = join("", [var.service_name, "-task"])
-  },
-  var.tags
+    {
+      "Name" = join("", [var.service_name, "-task"])
+    },
+    var.tags
   )
 }
 
@@ -114,24 +114,24 @@ data "aws_iam_policy_document" "instance_assume_role_policy" {
 # Launch Docker Service
 #------------------------------------------------------------------------------
 resource "aws_ecs_task_definition" "this" {
-  family                = var.service_name
-  execution_role_arn    = aws_iam_role.ecs_exec_role.arn
-  network_mode          = var.network_mode
+  family             = var.service_name
+  execution_role_arn = aws_iam_role.ecs_exec_role.arn
+  network_mode       = var.network_mode
   container_definitions = jsonencode([
     {
-      name             = var.service_name
-      image            = var.image_name
-      cpu              = var.service_cpu
-      memory           = var.service_memory
+      name              = var.service_name
+      image             = var.image_name
+      cpu               = var.service_cpu
+      memory            = var.service_memory
       memoryReservation = var.memory_reservation
-      essential        = var.essential
-      privileged       = var.privileged
-      command          = var.command
-      portMappings     = var.port_mappings
-      mountPoints      = var.mount_points
-      environment      = var.environment
-      linuxParameters  = var.linux_parameters
-      logConfiguration = var.log_configuration
+      essential         = var.essential
+      privileged        = var.privileged
+      command           = var.command
+      portMappings      = var.port_mappings
+      mountPoints       = var.mount_points
+      environment       = var.environment
+      linuxParameters   = var.linux_parameters
+      logConfiguration  = var.log_configuration
     }
   ])
   dynamic "volume" {
@@ -153,20 +153,20 @@ resource "aws_ecs_task_definition" "this" {
     }
   }
   tags = merge(
-  {
-    "Name" = var.service_name
-  },
-  var.tags
+    {
+      "Name" = var.service_name
+    },
+    var.tags
   )
 }
 
 resource "aws_ecs_service" "main" {
-  count           = var.deploy_with_tg ? 1 : 0
-  name            = var.service_name
-  task_definition = aws_ecs_task_definition.this.arn
-  cluster         = var.ecs_cluster_id
-  desired_count   = var.service_desired_count
-  iam_role        = aws_iam_role.instance_role[0].arn
+  count               = var.deploy_with_tg ? 1 : 0
+  name                = var.service_name
+  task_definition     = aws_ecs_task_definition.this.arn
+  cluster             = var.ecs_cluster_id
+  desired_count       = var.service_desired_count
+  iam_role            = aws_iam_role.instance_role[0].arn
   scheduling_strategy = var.scheduling_strategy
   load_balancer {
     target_group_arn = var.target_group_arn
