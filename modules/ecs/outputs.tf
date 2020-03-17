@@ -17,7 +17,3 @@ output "cluster_arn" {
   description = "The ARN that identifies the cluster"
   value       = element(concat(aws_ecs_cluster.this.*.arn, [""]), 0)
 }
-
-output "ecs_capacity_provider_arn" {
-  value = element(concat(aws_ecs_capacity_provider.this.*.arn, [""]), 0)
-}
