@@ -126,3 +126,21 @@ variable "additional_iam_statements" {
   }))
   default = []
 }
+
+variable "health_check_type" {
+  description = "EC2 or ELB. Controls how health checking is done"
+  type        = string
+  default     = "EC2"
+}
+
+variable "health_check_grace_period" {
+  description = "Time (in seconds) after instance comes into service before checking health"
+  type        = number
+  default     = 300
+}
+
+variable "termination_policies" {
+  description = "A list of policies to decide how the instances in the auto scale group should be terminated"
+  type        = list(string)
+  default     = ["OldestInstance", "Default"]
+}
