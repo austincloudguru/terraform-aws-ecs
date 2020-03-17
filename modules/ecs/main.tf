@@ -98,21 +98,6 @@ resource "aws_ecs_cluster" "this" {
   )
 }
 
-resource "aws_ecs_capacity_provider" "this" {
-  name = var.name
-  auto_scaling_group_provider {
-    auto_scaling_group_arn          = aws_autoscaling_group.this.arn
-    managed_termination_protection = var.managed_termination_protection
-
-    managed_scaling {
-      minimum_scaling_step_size = var.minimum_scaling_step_size
-      maximum_scaling_step_size = var.maximum_scaling_step_size
-      status                    = var.status
-      target_capacity           = var.target_capacity
-    }
-  }
-}
-
 #------------------------------------------------------------------------------
 # Create the Autoscaling Group
 #------------------------------------------------------------------------------

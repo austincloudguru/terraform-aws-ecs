@@ -45,36 +45,6 @@ variable "depends_on_efs" {
   default     = []
 }
 
-variable "managed_termination_protection" {
-  description = " Enables or disables container-aware termination of instances in the auto scaling group when scale-in happens"
-  type        = string
-  default     = "DISABLED"
-}
-
-variable "minimum_scaling_step_size" {
-  description = "The minimum step adjustment size."
-  type        = number
-  default     = null
-}
-
-variable "maximum_scaling_step_size" {
-  description = "The maximum step adjustment size."
-  type        = number
-  default     = null
-}
-
-variable "status" {
-  description = "Whether auto scaling is managed by ECS"
-  type        = string
-  default     = "ENABLED"
-}
-
-variable "target_capacity" {
-  description = "The target utilization for the capacity provider"
-  type        = number
-  default     = 80
-}
-
 variable "min_size" {
   description = "Minimum number of EC2 instances."
   type        = number
