@@ -1,20 +1,24 @@
-#------------------------------------------------------------------------------
-# Variables
-#------------------------------------------------------------------------------
-variable "depends_on_efs" {
-  description = "If attaching EFS, it makes sure that the mount targets are ready"
-  type        = list(string)
-  default     = []
+variable "name" {
+  description = "The name of the ECS Cluster"
+  type        = string
+  default     = ""
 }
 
 variable "vpc_id" {
-  description = "The VPC ID that the cluster will be deployed to"
+  description = "The VPC ID"
   type        = string
+  default     = ""
 }
 
 variable "subnet_ids" {
   description = "The Subnet IDs"
   type        = list(string)
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  type        = map(string)
+  default     = {}
 }
 
 variable "attach_efs" {
@@ -35,20 +39,10 @@ variable "efs_id" {
   default     = ""
 }
 
-variable "name" {
-  description = "ECS Cluster Name"
-  type        = string
-}
-
-variable "cidr_block" {
-  description = "ECS Cluster Name"
+variable "depends_on_efs" {
+  description = "If attaching EFS, it makes sure that the mount targets are ready"
   type        = list(string)
-}
-
-variable "tags" {
-  description = "A map of tags to add to all resources"
-  type        = map(string)
-  default     = {}
+  default     = []
 }
 
 variable "min_size" {
@@ -101,4 +95,28 @@ variable "additional_iam_statements" {
     resources = list(string)
   }))
   default = []
+}
+
+variable "health_check_type" {
+  description = "EC2 or ELB. Controls how health checking is done"
+  type        = string
+  default     = "EC2"
+}
+
+variable "health_check_grace_period" {
+  description = "Time (in seconds) after instance comes into service before checking health"
+  type        = number
+  default     = 300
+}
+
+variable "termination_policies" {
+  description = "A list of policies to decide how the instances in the auto scale group should be terminated"
+  type        = list(string)
+  default     = ["OldestInstance", "Default"]
+}
+
+variable "protect_from_scale_in" {
+  description = "Allows setting instance protection"
+  type        = bool
+  default     = false
 }

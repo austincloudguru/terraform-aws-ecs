@@ -1,5 +1,29 @@
 #------------------------------------------------------------------------------
-# Collect necessary data
+# Create the Security Group
+#------------------------------------------------------------------------------
+resource "aws_security_group" "this" {
+  name        = join("", [var.name, "-ecs"])
+  description = join(" ", ["Security Group for", var.name, "ecs"])
+  vpc_id      = var.vpc_id
+  tags = merge(
+    {
+      "Name" = var.name
+    },
+    var.tags
+  )
+}
+
+resource "aws_security_group_rule" "egress" {
+  security_group_id = aws_security_group.this.id
+  type              = "egress"
+  from_port         = 0
+  protocol          = "-1"
+  to_port           = 0
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+#------------------------------------------------------------------------------
+# Create the Userdata Templates
 #------------------------------------------------------------------------------
 data "template_file" "user_data-default" {
   count    = var.attach_efs ? 0 : 1
@@ -24,9 +48,8 @@ EOF
 }
 
 data "template_file" "user_data-efs" {
-  depends_on = [var.depends_on_efs]
-  count      = var.attach_efs ? 1 : 0
-  template   = <<EOF
+  count    = var.attach_efs ? 1 : 0
+  template = <<EOF
 Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
 
@@ -58,11 +81,25 @@ EOF
   vars = {
     ecs_cluster_name = aws_ecs_cluster.this.name
     efs_id           = var.efs_id
+    depends_on       = join("", var.depends_on_efs)
   }
 }
 
 #------------------------------------------------------------------------------
-# Local Values
+# Create the ECS Cluster
+#------------------------------------------------------------------------------
+resource "aws_ecs_cluster" "this" {
+  name = var.name
+  tags = merge(
+    {
+      "Name" = var.name
+    },
+    var.tags
+  )
+}
+
+#------------------------------------------------------------------------------
+# Create the Autoscaling Group
 #------------------------------------------------------------------------------
 locals {
   tags_asg_format = null_resource.tags_as_list_of_maps.*.triggers
@@ -78,50 +115,14 @@ resource "null_resource" "tags_as_list_of_maps" {
   }
 }
 
-#------------------------------------------------------------------------------
-# Create ECS Cluster
-#------------------------------------------------------------------------------
-resource "aws_security_group" "this" {
-  name        = var.name
-  description = "Security Group for ECS cluster"
-  vpc_id      = var.vpc_id
-  ingress {
-    from_port   = 0
-    protocol    = "-1"
-    to_port     = 0
-    cidr_blocks = var.cidr_block
-  }
-  egress {
-    from_port   = 0
-    protocol    = "-1"
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = merge(
-    {
-      "Name" = var.name
-    },
-    var.tags
-  )
-}
-
-resource "aws_ecs_cluster" "this" {
-  name = var.name
-  tags = merge(
-    {
-      "Name" = var.name
-    },
-    var.tags
-  )
-}
-
 resource "aws_autoscaling_group" "this" {
   name                      = var.name
   min_size                  = var.min_size
   max_size                  = var.max_size
   desired_capacity          = var.desired_capacity
-  health_check_type         = "EC2"
-  health_check_grace_period = 300
+  health_check_type         = var.health_check_type
+  health_check_grace_period = var.health_check_grace_period
+  termination_policies      = var.termination_policies
   vpc_zone_identifier       = var.subnet_ids
   launch_configuration      = aws_launch_configuration.this.name
   lifecycle {
