@@ -6,7 +6,7 @@ A set of Terraform modules for working with an Elastic Container Service Cluster
 ```hcl
 module "ecs-0" {
   source                    = "AustinCloudGuru/alb/aws//modules/ecs"
-  version                   = "1.0.1"
+  version                   = "2.0.2"
   name                      = "ecs-cluster"
   image_id                  = "ami-1234567890123"
   vpc_id                    = "vpc-1234567890123"
@@ -31,7 +31,7 @@ module "ecs-0" {
 ```hcl
 module "security_group_rule" {
   source            = "AustinCloudGuru/alb/aws//modules/ecs"
-  version           = "1.0.1"
+  version           = "2.0.2"
   description       = "ecs-cluster"
   security_group_id = data.terraform_remote_state.ecs-0.outputs.security_group_id
   from_port         = 80
@@ -44,7 +44,8 @@ module "security_group_rule" {
 `ecs-service`
 ```hcl
 module "jenkins-server" {
-  source = "git@github.com:AustinCloudGuru/terraform-aws-ecs//modules/ecs-service?ref=ch32/submodule-refactor"
+  source                = "AustinCloudGuru/alb/aws//modules/ecs-service"
+  version               = "2.0.2"
   ecs_cluster_id        = data.terraform_remote_state.ecs.outputs.cluster_arn
   image_name            = "my-httpd:2.4.41"
   service_name          = "my-webserver"
