@@ -177,8 +177,8 @@ variable "ulimits" {
   description = "A list of ulimits to set in the container."
   type = list(object({
     Name      = string
-    HardLimit = string
-    SoftLimit = string
+    HardLimit = number
+    SoftLimit = number
   }))
   default = null
 }

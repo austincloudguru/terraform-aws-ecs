@@ -41,7 +41,7 @@ This module deploys a service to an ECS cluster.
 | target\_group\_arn | The ARN of the Load Balancer target group to associate with the service. | `string` | `null` | no |
 | task\_iam\_policies | Additional IAM policies for the task | <pre>list(object({<br>    effect    = string<br>    actions   = list(string)<br>    resources = list(string)<br>  }))</pre> | `[]` | no |
 | tld | Top Level Domain to use | `string` | `""` | no |
-| ulimits | A list of ulimits to set in the container. | <pre>list(object({<br>    Name      = string<br>    HardLimit = string<br>    SoftLimit = string<br>  }))</pre> | `null` | no |
+| ulimits | A list of ulimits to set in the container. | <pre>list(object({<br>    Name      = string<br>    HardLimit = number<br>    SoftLimit = number<br>  }))</pre> | `null` | no |
 | volumes | Task volume definitions as list of configuration objects | <pre>list(object({<br>    host_path = string<br>    name      = string<br>    docker_volume_configuration = list(object({<br>      autoprovision = bool<br>      driver        = string<br>      driver_opts   = map(string)<br>      labels        = map(string)<br>      scope         = string<br>    }))<br>  }))</pre> | `[]` | no |
 
 ## Outputs
