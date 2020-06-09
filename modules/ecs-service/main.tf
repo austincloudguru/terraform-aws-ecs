@@ -132,6 +132,7 @@ resource "aws_ecs_task_definition" "this" {
       environment       = var.environment
       linuxParameters   = var.linux_parameters
       logConfiguration  = var.log_configuration
+      ulimits           = var.ulimits
     }
   ])
   dynamic "volume" {
