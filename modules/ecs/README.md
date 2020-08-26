@@ -2,18 +2,25 @@
 This module create an ECS cluster and a security group with no ingress and and egress to [0.0.0.0/0] (default).
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | >= 0.12.6, < 0.14 |
+| aws | >= 2.68, < 4.0 |
+
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | ~> 2.23 |
+| aws | >= 2.68, < 4.0 |
 | null | n/a |
 | template | n/a |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:-----:|
+|------|-------------|------|---------|:--------:|
 | additional\_iam\_statements | Additional IAM statements for the ECS instances | <pre>list(object({<br>    effect    = string<br>    actions   = list(string)<br>    resources = list(string)<br>  }))</pre> | `[]` | no |
 | associate\_public\_ip\_address | Whether to associate a public IP in the launch configuration | `bool` | `false` | no |
 | attach\_efs | Whether to try and attach an EFS volume to the instances | `bool` | `false` | no |
