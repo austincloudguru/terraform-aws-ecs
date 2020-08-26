@@ -30,7 +30,7 @@ module "ecs-0" {
 `ecs-security-group`
 ```hcl
 module "security_group_rule" {
-  source            = "AustinCloudGuru/alb/aws//modules/ecs"
+  source            = "AustinCloudGuru/alb/aws//modules/ecs-security-group"
   version           = "2.1.0"
   description       = "ecs-cluster"
   security_group_id = data.terraform_remote_state.ecs-0.outputs.security_group_id
