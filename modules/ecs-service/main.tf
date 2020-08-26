@@ -177,9 +177,10 @@ resource "aws_ecs_service" "main" {
 }
 
 resource "aws_ecs_service" "main-no-lb" {
-  count           = var.deploy_with_tg ? 0 : 1
-  name            = var.service_name
-  task_definition = aws_ecs_task_definition.this.arn
-  cluster         = var.ecs_cluster_id
-  desired_count   = var.service_desired_count
+  count               = var.deploy_with_tg ? 0 : 1
+  name                = var.service_name
+  task_definition     = aws_ecs_task_definition.this.arn
+  cluster             = var.ecs_cluster_id
+  desired_count       = var.service_desired_count
+  scheduling_strategy = var.scheduling_strategy
 }
