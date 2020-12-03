@@ -210,7 +210,7 @@ resource "aws_ecs_service" "main" {
   task_definition     = aws_ecs_task_definition.this.arn
   cluster             = var.ecs_cluster_id
   desired_count       = var.service_desired_count
-  iam_role            = aws_iam_role.instance_role[0].arn
+  iam_role            = var.network_mode == "awsvpc" ? null : aws_iam_role.instance_role[0].arn
   scheduling_strategy = var.scheduling_strategy
   load_balancer {
     target_group_arn = var.target_group_arn
