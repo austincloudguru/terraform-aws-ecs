@@ -48,16 +48,16 @@ data "aws_iam_policy_document" "ecs_exec_assume_role_policy" {
 }
 
 #------------------------------------------------------------------------------
-# Create the task profile
+# Create the iam role
 #------------------------------------------------------------------------------
 resource "aws_iam_role" "instance_role" {
   count              = var.deploy_with_tg ? 1 : 0
-  name               = join("", [var.service_name, "-task"])
+  name               = join("", [var.service_name, "-svc"])
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.instance_assume_role_policy[0].json
   tags = merge(
     {
-      "Name" = join("", [var.service_name, "-task"])
+      "Name" = join("", [var.service_name, "-svc"])
     },
     var.tags
   )
@@ -65,7 +65,7 @@ resource "aws_iam_role" "instance_role" {
 
 resource "aws_iam_role_policy" "instance_role_policy" {
   count  = var.deploy_with_tg ? 1 : 0
-  name   = join("", [var.service_name, "-task"])
+  name   = join("", [var.service_name, "-svc"])
   role   = aws_iam_role.instance_role[0].id
   policy = data.aws_iam_policy_document.role_policy[0].json
 }
@@ -85,6 +85,48 @@ data "aws_iam_policy_document" "role_policy" {
     ]
     resources = ["*"]
   }
+}
+
+data "aws_iam_policy_document" "instance_assume_role_policy" {
+  count = var.deploy_with_tg ? 1 : 0
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "ecs-tasks.amazonaws.com",
+        "ecs.amazonaws.com"
+      ]
+    }
+  }
+}
+
+#------------------------------------------------------------------------------
+# Create the task profile
+#------------------------------------------------------------------------------
+resource "aws_iam_role" "task_role" {
+  count              = var.task_iam_policies == null ? 0 : 1
+  name               = join("", [var.service_name, "-task"])
+  path               = "/"
+  assume_role_policy = data.aws_iam_policy_document.task_assume_role_policy[0].json
+  tags = merge(
+  {
+    "Name" = join("", [var.service_name, "-task"])
+  },
+  var.tags
+  )
+}
+
+resource "aws_iam_role_policy" "task_role_policy" {
+  count  = var.task_iam_policies == null ? 0 : 1
+  name   = join("", [var.service_name, "-task"])
+  role   = aws_iam_role.task_role[0].id
+  policy = data.aws_iam_policy_document.role_policy[0].json
+}
+
+data "aws_iam_policy_document" "role_policy" {
+  count = var.task_iam_policies == null ? 0 : 1
   dynamic "statement" {
     for_each = var.task_iam_policies
     content {
@@ -95,8 +137,8 @@ data "aws_iam_policy_document" "role_policy" {
   }
 }
 
-data "aws_iam_policy_document" "instance_assume_role_policy" {
-  count = var.deploy_with_tg ? 1 : 0
+data "aws_iam_policy_document" "task_assume_role_policy" {
+  count = var.task_iam_policies == null ? 0 : 1
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -116,6 +158,7 @@ data "aws_iam_policy_document" "instance_assume_role_policy" {
 resource "aws_ecs_task_definition" "this" {
   family             = var.service_name
   execution_role_arn = aws_iam_role.ecs_exec_role.arn
+  task_role_arn      = aws_iam_role.task_role[0].arn
   network_mode       = var.network_mode
   container_definitions = jsonencode([
     {
