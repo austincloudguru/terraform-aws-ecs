@@ -158,7 +158,7 @@ data "aws_iam_policy_document" "task_assume_role_policy" {
 resource "aws_ecs_task_definition" "this" {
   family             = var.service_name
   execution_role_arn = aws_iam_role.ecs_exec_role.arn
-  task_role_arn      = aws_iam_role.task_role[0].arn
+  task_role_arn      = var.task_iam_policies == null ? null : aws_iam_role.task_role[0].arn
   network_mode       = var.network_mode
   container_definitions = jsonencode([
     {
