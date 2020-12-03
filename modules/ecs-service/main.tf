@@ -125,7 +125,7 @@ resource "aws_iam_role_policy" "task_role_policy" {
   policy = data.aws_iam_policy_document.role_policy[0].json
 }
 
-data "aws_iam_policy_document" "role_policy" {
+data "aws_iam_policy_document" "task_role_policy" {
   count = var.task_iam_policies == null ? 0 : 1
   dynamic "statement" {
     for_each = var.task_iam_policies
