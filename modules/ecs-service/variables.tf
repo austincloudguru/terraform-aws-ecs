@@ -30,7 +30,7 @@ variable "task_iam_policies" {
     actions   = list(string)
     resources = list(string)
   }))
-  default = []
+  default = null
 }
 
 variable "image_name" {
