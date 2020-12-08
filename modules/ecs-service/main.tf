@@ -111,10 +111,10 @@ resource "aws_iam_role" "task_role" {
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.task_assume_role_policy[0].json
   tags = merge(
-  {
-    "Name" = join("", [var.service_name, "-task"])
-  },
-  var.tags
+    {
+      "Name" = join("", [var.service_name, "-task"])
+    },
+    var.tags
   )
 }
 
@@ -122,7 +122,7 @@ resource "aws_iam_role_policy" "task_role_policy" {
   count  = var.task_iam_policies == null ? 0 : 1
   name   = join("", [var.service_name, "-task"])
   role   = aws_iam_role.task_role[0].id
-  policy = data.aws_iam_policy_document.role_policy[0].json
+  policy = data.aws_iam_policy_document.task_role_policy[0].json
 }
 
 data "aws_iam_policy_document" "task_role_policy" {
