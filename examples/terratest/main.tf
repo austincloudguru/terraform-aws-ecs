@@ -50,7 +50,7 @@ module "ecs" {
   max_size         = "1"
   desired_capacity = "1"
   instance_type    = "t3.large"
-  key_name         = "acg-master"
+  key_name         = "aws-main"
   tags = {
     Terraform = "true"
   }
