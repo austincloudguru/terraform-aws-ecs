@@ -33,6 +33,16 @@ variable "task_iam_policies" {
   default = null
 }
 
+variable "exec_iam_policies" {
+  description = "Additional IAM policies for the task"
+  type = list(object({
+    effect    = string
+    actions   = list(string)
+    resources = list(string)
+  }))
+  default = []
+}
+
 variable "image_name" {
   description = "Name of the image to be deployed"
   type        = string
@@ -181,4 +191,10 @@ variable "ulimits" {
     SoftLimit = number
   }))
   default = null
+}
+
+variable "repository_credentials" {
+  description = "Container repository credentials for using private repos.  This map currently supports a single key; \"credentialsParameter\", which should be the ARN of a Secrets Manager's secret"
+  type        = map(string)
+  default     = null
 }

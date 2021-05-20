@@ -32,6 +32,15 @@ data "aws_iam_policy_document" "ecs_exec_policy" {
     ]
     resources = ["*"]
   }
+
+  dynamic "statement" {
+    for_each = var.exec_iam_policies
+    content {
+      effect    = lookup(statement.value, "effect", null)
+      actions   = lookup(statement.value, "actions", null)
+      resources = lookup(statement.value, "resources", null)
+    }
+  }
 }
 
 data "aws_iam_policy_document" "ecs_exec_assume_role_policy" {
@@ -162,20 +171,21 @@ resource "aws_ecs_task_definition" "this" {
   network_mode       = var.network_mode
   container_definitions = jsonencode([
     {
-      name              = var.service_name
-      image             = var.image_name
-      cpu               = var.service_cpu
-      memory            = var.service_memory
-      memoryReservation = var.memory_reservation
-      essential         = var.essential
-      privileged        = var.privileged
-      command           = var.command
-      portMappings      = var.port_mappings
-      mountPoints       = var.mount_points
-      environment       = var.environment
-      linuxParameters   = var.linux_parameters
-      logConfiguration  = var.log_configuration
-      ulimits           = var.ulimits
+      name                  = var.service_name
+      image                 = var.image_name
+      cpu                   = var.service_cpu
+      memory                = var.service_memory
+      memoryReservation     = var.memory_reservation
+      essential             = var.essential
+      privileged            = var.privileged
+      command               = var.command
+      portMappings          = var.port_mappings
+      mountPoints           = var.mount_points
+      environment           = var.environment
+      linuxParameters       = var.linux_parameters
+      logConfiguration      = var.log_configuration
+      ulimits               = var.ulimits
+      repositoryCredentials = var.repository_credentials
     }
   ])
   dynamic "volume" {

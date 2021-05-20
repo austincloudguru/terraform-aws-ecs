@@ -48,6 +48,7 @@ No modules.
 | <a name="input_ecs_cluster_id"></a> [ecs\_cluster\_id](#input\_ecs\_cluster\_id) | ID of the ECS cluster | `string` | n/a | yes |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environmental Variables to pass to the container | <pre>list(object({<br>    name  = string<br>    value = string<br>  }))</pre> | `null` | no |
 | <a name="input_essential"></a> [essential](#input\_essential) | Whether the task is essential | `bool` | `true` | no |
+| <a name="input_exec_iam_policies"></a> [exec\_iam\_policies](#input\_exec\_iam\_policies) | Additional IAM policies for the task | <pre>list(object({<br>    effect    = string<br>    actions   = list(string)<br>    resources = list(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_image_name"></a> [image\_name](#input\_image\_name) | Name of the image to be deployed | `string` | n/a | yes |
 | <a name="input_linux_parameters"></a> [linux\_parameters](#input\_linux\_parameters) | Additional Linux Parameters | <pre>object({<br>    capabilities = object({<br>      add  = list(string)<br>      drop = list(string)<br>    })<br>  })</pre> | `null` | no |
 | <a name="input_log_configuration"></a> [log\_configuration](#input\_log\_configuration) | Log configuration options to send to a custom log driver for the container. | <pre>object({<br>    logDriver = string<br>    options   = map(string)<br>    secretOptions = list(object({<br>      name      = string<br>      valueFrom = string<br>    }))<br>  })</pre> | `null` | no |
@@ -56,6 +57,7 @@ No modules.
 | <a name="input_network_mode"></a> [network\_mode](#input\_network\_mode) | The Network Mode to run the container at | `string` | `"bridge"` | no |
 | <a name="input_port_mappings"></a> [port\_mappings](#input\_port\_mappings) | Port mappings for the docker Container | <pre>list(object({<br>    hostPort      = number<br>    containerPort = number<br>    protocol      = string<br>  }))</pre> | `[]` | no |
 | <a name="input_privileged"></a> [privileged](#input\_privileged) | Whether the task is privileged | `bool` | `false` | no |
+| <a name="input_repository_credentials"></a> [repository\_credentials](#input\_repository\_credentials) | Container repository credentials for using private repos.  This map currently supports a single key; "credentialsParameter", which should be the ARN of a Secrets Manager's secret | `map(string)` | `null` | no |
 | <a name="input_scheduling_strategy"></a> [scheduling\_strategy](#input\_scheduling\_strategy) | The scheduling strategy to use for the service | `string` | `"REPLICA"` | no |
 | <a name="input_service_cpu"></a> [service\_cpu](#input\_service\_cpu) | CPU Units to Allocation | `number` | `128` | no |
 | <a name="input_service_desired_count"></a> [service\_desired\_count](#input\_service\_desired\_count) | Desired Number of Instances to run | `number` | `1` | no |
