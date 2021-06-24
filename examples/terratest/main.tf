@@ -69,7 +69,7 @@ module "security_group_rule" {
 module "ecs-service" {
   source                = "../../modules/ecs-service"
   ecs_cluster_id        = module.ecs.cluster_arn
-  image_name            = "my-httpd:2.4.41"
+  image_name            = "httpd:latest"
   service_name          = "terratest-webserver"
   service_memory        = 1024
   service_desired_count = 1
