@@ -1,4 +1,6 @@
 # AWS ECS Module
+[![CI](https://github.com/austincloudguru/terraform-aws-ecs/workflows/CI/badge.svg?event=push)](https://github.com/austincloudguru/terraform-aws-ecs/actions?query=workflow%3ACI)
+
 A set of Terraform modules for working with an Elastic Container Service Cluster
 
 ## Usage
