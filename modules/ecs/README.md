@@ -15,7 +15,6 @@ This module create an ECS cluster and a security group with no ingress and and e
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 2.68, < 4.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | n/a |
-| <a name="provider_template"></a> [template](#provider\_template) | n/a |
 
 ## Modules
 
@@ -36,8 +35,6 @@ No modules.
 | [null_resource.tags_as_list_of_maps](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [aws_iam_policy_document.assume_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
-| [template_file.user_data-default](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
-| [template_file.user_data-efs](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 
 ## Inputs
 
