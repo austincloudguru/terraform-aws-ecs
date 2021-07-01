@@ -17,7 +17,7 @@ concurrency: terraform-aws-ecs
 
 jobs:
   build:
-    name: Test EFS Module
+    name: Test ECS Module
     runs-on: ubuntu-latest
 
     steps:
