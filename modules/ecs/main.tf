@@ -53,17 +53,10 @@ resource "aws_ecs_cluster" "this" {
 # Create the Autoscaling Group
 #------------------------------------------------------------------------------
 locals {
-  tags_asg_format = null_resource.tags_as_list_of_maps.*.triggers
-}
-
-resource "null_resource" "tags_as_list_of_maps" {
-  count = length(keys(var.tags))
-
-  triggers = {
-    "key"                 = keys(var.tags)[count.index]
-    "value"               = values(var.tags)[count.index]
-    "propagate_at_launch" = "true"
-  }
+  asg_tags = merge(
+    { "Name" = var.name },
+    var.tags
+  )
 }
 
 resource "aws_autoscaling_group" "this" {
@@ -80,16 +73,14 @@ resource "aws_autoscaling_group" "this" {
     create_before_destroy = true
   }
 
-  tags = concat(
-    [
-      {
-        key                 = "Name"
-        value               = var.name
-        propagate_at_launch = true
-      }
-    ],
-    local.tags_asg_format,
-  )
+  dynamic "tag" {
+    for_each = local.asg_tags
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+  }
 }
 
 resource "aws_launch_configuration" "this" {

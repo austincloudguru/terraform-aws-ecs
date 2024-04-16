@@ -41,16 +41,17 @@ module "vpc" {
 }
 
 module "ecs" {
-  source           = "../../modules/ecs"
-  name             = "terratest-cluster"
-  image_id         = data.aws_ami.latest_ecs_ami.image_id
-  vpc_id           = module.vpc.vpc_id
-  subnet_ids       = module.vpc.public_subnets
-  min_size         = "1"
-  max_size         = "1"
-  desired_capacity = "1"
-  instance_type    = "t3.large"
-  key_name         = "aws-main"
+  source                      = "../../modules/ecs"
+  name                        = "terratest-cluster"
+  image_id                    = data.aws_ami.latest_ecs_ami.image_id
+  vpc_id                      = module.vpc.vpc_id
+  subnet_ids                  = module.vpc.public_subnets
+  min_size                    = "1"
+  max_size                    = "1"
+  desired_capacity            = "1"
+  instance_type               = "t3.large"
+  key_name                    = "aws-main"
+  associate_public_ip_address = true
   tags = {
     Terraform = "true"
   }
