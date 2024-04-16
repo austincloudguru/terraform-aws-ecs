@@ -57,18 +57,7 @@ locals {
     { "Name" = var.name },
     var.tags
   )
-  # tags_asg_format = null_resource.tags_as_list_of_maps.*.triggers
 }
-
-# resource "null_resource" "tags_as_list_of_maps" {
-#   count = length(keys(var.tags))
-
-#   triggers = {
-#     "key"                 = keys(var.tags)[count.index]
-#     "value"               = values(var.tags)[count.index]
-#     "propagate_at_launch" = "true"
-#   }
-#}
 
 resource "aws_autoscaling_group" "this" {
   name                      = var.name
