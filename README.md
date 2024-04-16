@@ -1,5 +1,5 @@
 # AWS ECS Module
-[![Terratest](https://github.com/austincloudguru/terraform-aws-ecs/workflows/Terratest/badge.svg?event=push)](https://github.com/austincloudguru/terraform-aws-ecs/actions?query=workflow%3ATerratest)
+[![Terratest](https://github.com/austincloudguru/terraform-aws-ecs/workflows/Terratest/badge.svg)](https://github.com/austincloudguru/terraform-aws-ecs/actions?query=workflow%3ATerratest)
 ![Latest Version](https://img.shields.io/github/v/tag/austincloudguru/terraform-aws-ecs?sort=semver&label=Latest%20Version)
 [![License](https://img.shields.io/github/license/austincloudguru/terraform-aws-ecs)](https://github.com/austincloudguru/terraform-aws-ecs/blob/master/LICENSE)
 
